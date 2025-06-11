@@ -4,6 +4,19 @@ require 'moderator_constraint'
 Rails.application.routes.draw do
   # mount Sidekiq::Web => '/sidekiq', :constraints => ModeratorConstraint.new
 
+  # Artist submissions to a mixtape
+  resources :playlists, only: [] do
+    resources :submissions, only: [:new, :create], controller: 'submissions'
+  end
+
+  # DJ management of submissions
+  namespace :dj do
+    resources :submissions, only: [:index, :update]
+  end
+
+  # Artist's view of their sent submissions
+  resources :submissions, only: [:index], controller: 'submissions', path: 'my_submissions'
+
   namespace :admin do
     get 'possibly_deleted_user/:id', :to => 'users#show', as: 'possibly_deleted_user'
 

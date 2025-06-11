@@ -1,0 +1,39 @@
+<h1>My Sent Submissions</h1>
+
+<% if @sent_submissions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Mixtape Title</th>
+        <th>DJ</th>
+        <th>Track Submitted</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Date Submitted</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sent_submissions.each do |submission| %>
+        <tr>
+          <td><%= link_to submission.playlist.title, playlist_path(submission.playlist) %></td>
+          <td><%= link_to submission.dj.name, user_home_path(submission.dj) %></td>
+          <td><%= submission.asset.title %></td>
+          <td><%= simple_format submission.message %></td>
+          <td><span class="submission_status_<%= submission.status %>"><%= submission.status.humanize %></span></td>
+          <td><%= time_ago_in_words(submission.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You haven't submitted any tracks yet.</p>
+<% end %>
+
+<style>
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  .submission_status_pending { color: orange; }
+  .submission_status_approved { color: green; }
+  .submission_status_rejected { color: red; }
+</style>

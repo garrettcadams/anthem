@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_11_164131) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_11_141529) do
   create_table "account_requests", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "email"
     t.string "login"
@@ -274,6 +274,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_164131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_settings_on_user_id"
+  end
+
+  create_table "submissions", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "artist_id", null: false
+    t.integer "dj_id", null: false
+    t.integer "asset_id", null: false
+    t.integer "playlist_id", null: false
+    t.string "status", default: "pending", null: false
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["artist_id"], name: "index_submissions_on_artist_id"
+    t.index ["asset_id"], name: "index_submissions_on_asset_id"
+    t.index ["dj_id"], name: "index_submissions_on_dj_id"
+    t.index ["playlist_id"], name: "index_submissions_on_playlist_id"
   end
 
   create_table "thredded_categories", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -602,6 +617,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_164131) do
     t.boolean "is_spam", default: false
     t.datetime "deleted_at"
     t.integer "invited_by_id"
+    t.string "role", default: "listener", null: false
     t.index ["updated_at"], name: "index_users_on_updated_at"
   end
 
@@ -609,6 +625,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_11_164131) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "patrons", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "submissions", "assets"
+  add_foreign_key "submissions", "playlists"
+  add_foreign_key "submissions", "users", column: "artist_id"
+  add_foreign_key "submissions", "users", column: "dj_id"
   add_foreign_key "thredded_messageboard_users", "thredded_messageboards"
   add_foreign_key "thredded_messageboard_users", "thredded_user_details"
   add_foreign_key "thredded_user_post_notifications", "thredded_posts", column: "post_id", on_delete: :cascade

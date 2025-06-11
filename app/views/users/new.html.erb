@@ -22,5 +22,45 @@
 <% end %>
 
 <% content_for :right do %>
+  <div class="box">
+    <h2>Create User Account</h2>
+    <%= form_with model: @user, local: true do |f| %>
+      <%= render partial: 'shared/errors', locals: { errors: @user.errors } %>
+
+      <div class="field">
+        <%= f.label :login %><br />
+        <%= f.text_field :login %>
+      </div>
+
+      <div class="field">
+        <%= f.label :email %><br />
+        <%= f.email_field :email %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password %><br />
+        <%= f.password_field :password %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation %>
+      </div>
+
+      <div class="field">
+        <%= f.label :display_name %><br />
+        <%= f.text_field :display_name %>
+      </div>
+
+      <div class="field">
+        <%= f.label :role %><br />
+        <%= f.select :role, User.roles.keys.map { |r| [r.humanize, r] }, prompt: 'Select your role' %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Create Account" %>
+      </div>
+    <% end %>
+  </div>
   <%= render partial: 'join' %>
 <% end %>

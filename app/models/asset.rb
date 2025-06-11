@@ -41,6 +41,7 @@ class Asset < ApplicationRecord
   has_many :playlists, through: :tracks
   has_many :listens,   -> { order('listens.created_at DESC') }, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :submissions, dependent: :destroy
 
   has_many :listeners,
     -> { distinct.order('listens.created_at DESC') },

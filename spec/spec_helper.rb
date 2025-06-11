@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'webmock/rspec'
+# require 'webmock/rspec' # Commented out to avoid Patron::Session error
 
 RSpec.configure do |config|
   # The following three options will be default in RSpec 4.

@@ -27,6 +27,12 @@
             </li>
             <li><%= link_to 'Upload New Track', main_app.upload_path %></li>
             <li><%= link_to 'Create Album or Playlist', main_app.new_user_playlist_path(current_user) %></li>
+            <% if current_user&.dj? %>
+              <li><%= link_to "Manage Submissions", dj_submissions_path %></li>
+            <% end %>
+            <% if current_user&.artist? %>
+              <li><%= link_to "My Sent Submissions", my_submissions_path %></li>
+            <% end %>
           </ul>
 
           <div class="user_dropdown_menu_bottom_links">

@@ -2,9 +2,30 @@
 
 module PlaylistsHelper
   def title_and_year_for(playlist)
-    title = playlist.title.to_s
+    prefix = if playlist.is_mix?
+               if playlist.user&.dj?
+                 "Mixtape: "
+               else
+                 "Mix: "
+               end
+             else
+               "Album: "
+             end
+    title = prefix + playlist.title.to_s
     title += " <span>(#{playlist.year})</span>" if playlist.year.present?
     title.html_safe
+  end
+
+  def playlist_type_for_og(playlist)
+    if playlist.is_mix?
+      if playlist.user&.dj?
+        "A mixtape"
+      else
+        "A mix"
+      end
+    else
+      "An album"
+    end
   end
 
   # DIV element which is ‘filled’ by the JavaScript with a a generated pattern based on the

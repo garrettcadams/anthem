@@ -37,6 +37,22 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "associations" do
+    it { should have_many(:sent_submissions).class_name('Submission').with_foreign_key('artist_id').dependent(:destroy) }
+    it { should have_many(:received_submissions).class_name('Submission').with_foreign_key('dj_id').dependent(:destroy) }
+  end
+
+  describe "enums" do
+    it { should define_enum_for(:role).with_values(listener: 'listener', artist: 'artist', dj: 'dj').backed_by_column_of_type(:string) }
+  end
+
+  describe "defaults" do
+    it 'defaults role to listener' do
+      user = User.new
+      expect(user.role).to eq('listener')
+    end
+  end
+
   context "validation" do
     it "should be valid with email, login and password" do
       expect(new_user).to be_valid

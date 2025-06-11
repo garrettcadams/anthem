@@ -1,0 +1,48 @@
+<h1>Pending Submissions for Your Mixtapes</h1>
+
+<% if @pending_submissions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Artist</th>
+        <th>Track</th>
+        <th>Target Mixtape</th>
+        <th>Message</th>
+        <th>Received</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_submissions.each do |submission| %>
+        <tr>
+          <td><%= link_to submission.artist.name, user_path(submission.artist) %></td>
+          <td><%= link_to submission.asset.title, user_track_path(submission.asset.user, submission.asset) %></td>
+          <td><%= link_to submission.playlist.title, playlist_path(submission.playlist) %></td>
+          <td><%= simple_format submission.message %></td>
+          <td><%= time_ago_in_words(submission.created_at) %> ago</td>
+          <td>
+            <%= form_with model: submission, url: dj_submission_path(submission), method: :patch, local: true do |f| %>
+              <%= f.hidden_field :status, value: 'approved' %>
+              <%= f.submit "Approve", class: 'button approve' %>
+            <% end %>
+            <%= form_with model: submission, url: dj_submission_path(submission), method: :patch, local: true do |f| %>
+              <%= f.hidden_field :status, value: 'rejected' %>
+              <%= f.submit "Reject", class: 'button reject' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You have no pending submissions at this time.</p>
+<% end %>
+
+<style>
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  .button { margin-bottom: 5px; }
+  .approve { background-color: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+  .reject { background-color: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+</style>

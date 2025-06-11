@@ -1,4 +1,4 @@
-class ChangeToPasswordHash < ActiveRecord::Migration
+class ChangeToPasswordHash < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :users, :crypted_password, :password_hash
   end

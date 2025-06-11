@@ -4,9 +4,9 @@
 
 <%= content_for :open_graph do %>
   <meta property="og:url" content="<%= request.url %>" />
-  <meta property="og:type" content="music.album" />
+  <meta property="og:type" content="music.album" /> <%# TODO: Consider changing type for mixes/mixtapes if appropriate OG type exists %>
   <meta property="og:title" content="<%= @playlist.title %>" />
-  <meta property="og:description" content="An album by <%= @user.name %>" />
+  <meta property="og:description" content="<%= playlist_type_for_og(@playlist) %> by <%= @user.name %>" />
   <meta property="music.musician" content="<%= user_home_url(@user) %>">
   <meta property="og:image" content="<%= playlist_cover_url(@playlist, variant: :playlist_cover) %>" />
 <% end %>
@@ -20,6 +20,13 @@
   <div class="playlist_sidebar" data-playlist-target="sidebar">
     <%= render 'playlist' %>
   </div>
+
+  <% if current_user&.artist? && @playlist.is_mix? && @playlist.user&.dj? && @playlist.user != current_user %>
+    <div class="submit_to_mixtape_link box">
+      <p><%= link_to "Submit your track to this mixtape", new_playlist_submission_path(@playlist) %></p>
+    </div>
+  <% end %>
+
   <% if @asset %>
     <%= render partial: 'shared/asset' %>
   <% else %>

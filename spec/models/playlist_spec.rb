@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Playlist, type: :model do
+  it { should have_many(:submissions).dependent(:destroy) }
+
   it 'should be valid with title, description, user' do
     expect(playlists(:owp)).to be_valid
   end

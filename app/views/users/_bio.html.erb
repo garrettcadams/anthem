@@ -21,6 +21,10 @@
       <div class="edit_profile_top_right">
         <label for="display_name">Name</label>
         <%= f.text_field :display_name %>
+
+        <label for="user_role">Role</label>
+        <%= f.select :role, User.roles.keys.map { |r| [r.humanize, r] }, prompt: 'Select your role' %>
+
         <%= f.fields_for :profile do |f| %>
           <div class="city_and_country">
             <div>

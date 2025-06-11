@@ -20,6 +20,7 @@ class Playlist < ActiveRecord::Base
   has_many :public_assets,
     -> { where('assets.private = ?', false) },
     through: :tracks, source: :asset
+  has_many :submissions, dependent: :destroy
 
   validates_presence_of :title, :user_id
   validates_length_of   :title, within: 3..100

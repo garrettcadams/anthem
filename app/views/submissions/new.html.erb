@@ -1,0 +1,35 @@
+<h1>Submit a Track to <%= @playlist.title %> (DJ: <%= @playlist.user.name %>)</h1>
+
+<%= form_with model: [@playlist, @submission], local: true do |f| %>
+  <% if @submission.errors.any? %>
+    <div id="error_explanation" style="color: red;">
+      <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
+      <ul>
+        <% @submission.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :asset_id, "Select your track" %><br />
+    <%= f.collection_select :asset_id, @artist_assets, :id, :title, { prompt: "Choose one of your tracks" } %>
+  </div>
+
+  <%# playlist_id is set via the nested route and controller %>
+  <%# dj_id is set in the controller based on playlist owner %>
+
+  <div class="field">
+    <%= f.label :message, "Message to DJ (optional)" %><br />
+    <%= f.text_area :message, rows: 4 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Submit Track" %>
+  </div>
+<% end %>
+
+<br>
+<%= link_to 'Back to Mixtape', playlist_path(@playlist) %>
+<%= link_to 'Cancel', root_path %>

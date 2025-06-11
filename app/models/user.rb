@@ -3,6 +3,7 @@
 class User < ApplicationRecord
   include SoftDeletion
   include Rakismet::Model
+  enum role: { listener: 'listener', artist: 'artist', dj: 'dj' }
 
   rakismet_attrs  author: proc { name },
                   author_email: proc { email },
@@ -73,6 +74,7 @@ class User < ApplicationRecord
   before_destroy :destroy_with_relations
   before_save { |u| u.display_name = u.login if u.display_name.blank? }
   after_create :create_profile, :create_settings
+  after_initialize :set_default_role, if: :new_record?
 
   has_one :profile, dependent: :destroy
   accepts_nested_attributes_for :profile, update_only: true # we don't want user to be printing new profiles
@@ -127,6 +129,9 @@ class User < ApplicationRecord
   has_many :listeners,
     -> { distinct },
     through: :track_plays
+
+  has_many :sent_submissions, class_name: 'Submission', foreign_key: 'artist_id', dependent: :destroy
+  has_many :received_submissions, class_name: 'Submission', foreign_key: 'dj_id', dependent: :destroy
 
   has_many :followings, dependent: :destroy
   has_many :follows, dependent: :destroy, class_name: 'Following', foreign_key: 'follower_id'
@@ -341,6 +346,10 @@ class User < ApplicationRecord
 
   def make_first_user_admin
     self.admin = true if User.count.zero?
+  end
+
+  def set_default_role
+    self.role ||= :listener
   end
 end
 
